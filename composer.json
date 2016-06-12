@@ -8,6 +8,10 @@
         {
             "name": "Honarkhah",
             "email": "support@honarkhah.com"
+        },
+        {
+            "name": "Simple Software LLC",
+            "email": "support@simplesoftware.io"
         }
     ],
     "require": {
