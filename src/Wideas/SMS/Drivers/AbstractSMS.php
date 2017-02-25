@@ -1,8 +1,8 @@
 <?php
 
-namespace SimpleSoftwareIO\SMS\Drivers;
+namespace Wideas\SMS\Drivers;
 
-use SimpleSoftwareIO\SMS\IncomingMessage;
+use Wideas\SMS\IncomingMessage;
 
 abstract class AbstractSMS
 {
@@ -50,14 +50,14 @@ abstract class AbstractSMS
     protected function buildUrl(array $segments = [])
     {
         //Get the base URL and add a ?
-        $url = $this->apiBase.'?';
+        $url = $this->apiBase . '?';
 
         if (isset($this->apiEnding)) {
             $segments = array_merge($segments, $this->apiEnding);
         }
 
         foreach ($segments as $key => $value) {
-            $url = $url."$key=$value&";
+            $url = $url . "$key=$value&";
         }
 
         //Remove the final &
@@ -70,7 +70,7 @@ abstract class AbstractSMS
      * Builds the body part of the request and adds it to the body array.
      *
      * @param array|string $values Provides the data to be merged into the array. If a string, the key must be provided.
-     * @param null         $key    Holds the key in which a string will be merged into the array.
+     * @param null $key Holds the key in which a string will be merged into the array.
      */
     public function buildBody($values, $key = null)
     {

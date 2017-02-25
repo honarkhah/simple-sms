@@ -1,6 +1,6 @@
 <?php
 
-namespace SimpleSoftwareIO\SMS;
+namespace Wideas\SMS;
 
 use Closure;
 use Illuminate\Log\Writer;
@@ -8,14 +8,14 @@ use Illuminate\Support\Str;
 use SuperClosure\Serializer;
 use Illuminate\Queue\QueueManager;
 use Illuminate\Container\Container;
-use SimpleSoftwareIO\SMS\Drivers\DriverInterface;
+use Wideas\SMS\Drivers\DriverInterface;
 
 class SMS
 {
     /**
      * The Driver Interface instance.
      *
-     * @var \SimpleSoftwareIO\SMS\Drivers\DriverInterface
+     * @var \Wideas\SMS\Drivers\DriverInterface
      */
     protected $driver;
 
@@ -85,7 +85,7 @@ class SMS
      * @param array    $data     The data that needs to be passed into the view.
      * @param \Closure $callback The methods that you wish to fun on the message.
      *
-     * @return \SimpleSoftwareIO\SMS\OutgoingMessage The outgoing message that was sent.
+     * @return \Wideas\SMS\OutgoingMessage The outgoing message that was sent.
      */
     public function send($view, $data, $callback)
     {
@@ -121,7 +121,7 @@ class SMS
     /**
      * Creates a new Message instance.
      *
-     * @return \SimpleSoftwareIO\SMS\OutgoingMessage
+     * @return \Wideas\SMS\OutgoingMessage
      */
     protected function createOutgoingMessage()
     {

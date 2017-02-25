@@ -1,8 +1,8 @@
 <?php
 
-namespace SimpleSoftwareIO\SMS\Drivers;
+namespace Wideas\SMS\Drivers;
 
-use SimpleSoftwareIO\SMS\OutgoingMessage;
+use Wideas\SMS\OutgoingMessage;
 
 interface DriverInterface
 {
@@ -40,3 +40,4 @@ interface DriverInterface
      */
     public function receive($raw);
 }
+

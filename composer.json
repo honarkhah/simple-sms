@@ -1,13 +1,17 @@
 {
-    "name": "simplesoftwareio/simple-sms",
-    "description": "Simple-SMS is a package made for Laravel to send/receive (polling/pushing) text messages.  Currently supports CallFire, EZTexting, Email Gateways, Mozeo, and Twilio.",
-    "keywords": ["sms", "laravel", "simple", "twilio", "callfire", "eztexting", "mozeo", "labsmobile", "nexmo", "text messages", "send", "receive"],
+    "name": "mammutgroup/simple-sms",
+    "description": "laravel-SMS is a package made for Laravel to send/receive (polling/pushing) text messages.  Currently supports melipayamak, kavengar and Twilio.",
+    "keywords": ["sms", "laravel", "melipayamak", "kavenegar",  "twilio", "text messages", "send", "receive"],
     "homepage": "http://www.simplesoftware.io",
     "license": "MIT",
     "authors": [
         {
             "name": "Simple Software LLC",
             "email": "support@simplesoftware.io"
+        },
+	{
+            "name": "Honarkhah",
+            "email": "support@honarkhah.com"
         }
     ],
     "require": {
@@ -18,7 +22,8 @@
         "illuminate/support": ">=5.0.0",
         "illuminate/view": ">=5.0.0",
         "twilio/sdk": "~4",
-        "guzzlehttp/guzzle": "~6"
+        "guzzlehttp/guzzle": "~6",
+        "artisaninweb/laravel-soap": "0.2.5.10"
     },
     "require-dev": {
         "mockery/mockery": "0.9.*",
@@ -26,7 +31,7 @@
     },
     "autoload": {
         "psr-0": {
-            "SimpleSoftwareIO\\SMS\\": "src/"
+            "Wideas\\SMS\\": "src/"
         }
     },
     "minimum-stability": "stable"

@@ -1,6 +1,6 @@
 <?php
 
-namespace SimpleSoftwareIO\SMS;
+namespace Wideas\SMS;
 
 use Illuminate\View\Factory;
 
