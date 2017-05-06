@@ -64,7 +64,7 @@ class KavenegarApi
             if ($json_return->status != 200) {
                 throw new ApiException($json_return->message, $json_return->status);
             }
-            if ($this->debug == true) {
+//            if ($th1is->debug == true) {
                 echo "[Responsive_Message] : " . $json_return->message . "\r\n";
                 echo "[Responsive_Status] : " . $json_return->status . "\r\n";
                 if (is_null($json_response->entries)) {
@@ -72,7 +72,7 @@ class KavenegarApi
                 } else {
                     echo "=========================\r\n\r\n";
                 }
-            }
+//            }
             return $json_response->entries;
         }
     }
@@ -267,7 +267,7 @@ class KavenegarApi
         $path = $this->get_path("lookup", "verify");
         $params = array(
             "receptor" => $receptor,
-            "token" => $token,
+            "token" => $token['token'],
             "template" => $template
         );
         return $this->execute($path, $params);

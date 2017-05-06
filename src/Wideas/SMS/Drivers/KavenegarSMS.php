@@ -22,9 +22,9 @@ class KavenegarSMS extends AbstractSMS implements DriverInterface
      * @var bool
      */
     protected $verify;
-    
+
     protected $defaultLineNumber;
-    
+
     protected $lineNumbers;
 
     protected $client;
@@ -57,10 +57,11 @@ class KavenegarSMS extends AbstractSMS implements DriverInterface
     {
         $data = $message->getData();
         $from = $message->getFrom();
+        $view = $message->getView();
         $composeMessage = $message->composeMessage();
         $receptor = (array) $message->getTo();
         if (isset($data['method']) && $data['method'] == 'verifyLookup') {
-            $this->verifyLookup($receptor[0], $composeMessage, 'VerificationCode');
+            $this->verifyLookup($receptor[0], $data['token_data'], $view);
             return true;
         }
         if (count($receptor) == 1) {
