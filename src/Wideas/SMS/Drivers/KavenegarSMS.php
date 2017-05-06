@@ -22,9 +22,9 @@ class KavenegarSMS extends AbstractSMS implements DriverInterface
      * @var bool
      */
     protected $verify;
-
+    
     protected $defaultLineNumber;
-
+    
     protected $lineNumbers;
 
     protected $client;
