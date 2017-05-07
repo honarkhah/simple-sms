@@ -64,7 +64,7 @@ class KavenegarApi
             if ($json_return->status != 200) {
                 throw new ApiException($json_return->message, $json_return->status);
             }
-            if ($th1is->debug == true) {
+            if ($this->debug == true) {
                 echo "[Responsive_Message] : " . $json_return->message . "\r\n";
                 echo "[Responsive_Status] : " . $json_return->status . "\r\n";
                 if (is_null($json_response->entries)) {
