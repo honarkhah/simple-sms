@@ -4,10 +4,16 @@ namespace Wideas\SMS;
 
 use GuzzleHttp\Client;
 use Illuminate\Support\Manager;
-use Wideas\SMS\Drivers\KavenegarSMS;
+use Wideas\SMS\Drivers\EmailSMS;
 use Wideas\SMS\Drivers\MelipayamakSMS;
+use Wideas\SMS\Drivers\NexmoSMS;
+use Wideas\SMS\Drivers\MozeoSMS;
+use Wideas\SMS\Drivers\Sms5m5SMS;
 use Wideas\SMS\Drivers\TwilioSMS;
-
+use Wideas\SMS\Drivers\ZenviaSMS;
+use Wideas\SMS\Drivers\CallFireSMS;
+use Wideas\SMS\Drivers\EZTextingSMS;
+use Wideas\SMS\Drivers\LabsMobileSMS;
 
 class DriverManager extends Manager
 {
@@ -56,7 +62,7 @@ class DriverManager extends Manager
     protected function createMelipayamakDriver()
     {
         $config = $this->app['config']->get('sms.melipayamak', []);
-        
+
         $provider = new MelipayamakSMS(
             new Client(),
             $config['username'],
@@ -66,17 +72,14 @@ class DriverManager extends Manager
 
         return $provider;
     }
-
-    /**
-     * Create an instance of the MelipayamakSMS driver.
-     *
-     * @return MelipayamakSMS
-     */
-    protected function createKavenegarDriver()
+    protected function createSms5m5Driver()
     {
-        $provider = new KavenegarSMS(
-            new Client(),
-            true
+        $config = $this->app['config']->get('sms.sms5m5', []);
+
+        $provider = new Sms5m5SMS(
+            $config['username'],
+            $config['password'],
+            $config['lineNumbers']
         );
 
         return $provider;

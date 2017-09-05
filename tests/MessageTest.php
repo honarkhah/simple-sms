@@ -1,7 +1,7 @@
 <?php
 
 use Mockery as m;
-use SimpleSoftwareIO\SMS\OutgoingMessage;
+use Wideas\SMS\OutgoingMessage;
 
 class MessageTest extends \PHPUnit_Framework_TestCase
 {
@@ -57,9 +57,9 @@ class MessageTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($to, $this->message->getToWithCarriers());
 
         $to = [
-      0 => ['number' => '+15555555555', 'carrier' => 'att'],
-      1 => ['number' => '+14444444444', 'carrier' => 'verizon'],
-    ];
+            0 => ['number' => '+15555555555', 'carrier' => 'att'],
+            1 => ['number' => '+14444444444', 'carrier' => 'verizon'],
+        ];
         $this->message->to('+14444444444', 'verizon');
         $this->assertEquals($to, $this->message->getToWithCarriers());
     }
@@ -71,4 +71,5 @@ class MessageTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals($to, $this->message->getTo());
     }
+
 }

@@ -3,13 +3,12 @@
 namespace Wideas\SMS;
 
 use Closure;
+use Illuminate\Log\Writer;
 use Illuminate\Support\Str;
 use SuperClosure\Serializer;
 use Illuminate\Queue\QueueManager;
 use Illuminate\Container\Container;
 use Wideas\SMS\Drivers\DriverInterface;
-
-class SMSNotSentException extends \Exception{}
 
 class SMS
 {
@@ -19,6 +18,20 @@ class SMS
      * @var \Wideas\SMS\Drivers\DriverInterface
      */
     protected $driver;
+
+    /**
+     * The log writer instance.
+     *
+     * @var \Illuminate\Log\Writer
+     */
+    protected $logger;
+
+    /**
+     * Determines if a message should be sent or faked.
+     *
+     * @var bool
+     */
+    protected $pretending = false;
 
     /**
      * The IOC Container.
@@ -84,9 +97,25 @@ class SMS
 
         call_user_func($callback, $message);
 
-        $this->driver->send($message);
+        if (!$this->pretending) {
+            $this->driver->send($message);
+        } elseif (isset($this->logger)) {
+            $this->logMessage($message);
+        }
 
         return $message;
+    }
+
+    /**
+     * Logs that a message was sent.
+     *
+     * @param $message
+     */
+    protected function logMessage($message)
+    {
+        $numbers = implode(' , ', $message->getTo());
+
+        $this->logger->info("Pretending to send SMS message to: $numbers");
     }
 
     /**
@@ -107,6 +136,39 @@ class SMS
     }
 
     /**
+     * Returns if the message should be faked when sent or not.
+     *
+     * @return bool
+     */
+    public function isPretending()
+    {
+        return $this->pretending;
+    }
+
+    /**
+     * Fake sending a SMS.
+     *
+     * @param $view The desired view
+     * @param $data The data to fill the view
+     * @param $callback The message callback
+     */
+    public function pretend($view, $data, $callback)
+    {
+        $this->setPretending(true);
+        $this->send($view, $data, $callback);
+    }
+
+    /**
+     * Sets if SMS should be fake send a SMS.
+     *
+     * @param bool $pretend
+     */
+    public function setPretending($pretend = false)
+    {
+        $this->pretending = $pretend;
+    }
+
+    /**
      * Sets the IoC container.
      *
      * @param Container $container
@@ -124,6 +186,20 @@ class SMS
     public function alwaysFrom($number)
     {
         $this->from = $number;
+    }
+
+    /**
+     * Set the log writer instance.
+     *
+     * @param \Illuminate\Log\Writer $logger
+     *
+     * @return $this
+     */
+    public function setLogger(Writer $logger)
+    {
+        $this->logger = $logger;
+
+        return $this;
     }
 
     /**
@@ -149,7 +225,7 @@ class SMS
      * @param array           $data     An array of data to fill the view.
      * @param \Closure|string $callback The callback to run on the Message class.
      */
-    public function queueOn($queue, $view, $data, $callback)
+    public function queueOn($queue, $view, array $data, $callback)
     {
         $this->queue($view, $data, $callback, $queue);
     }
@@ -163,11 +239,11 @@ class SMS
      * @param \Closure|string $callback The callback to run on the Message class.
      * @param null|string     $queue    The desired queue to push the message to.
      */
-    public function later($delay, $view, $data, $callback, $queue = null)
+    public function later($delay, $view, array $data, $callback, $queue = null)
     {
         $callback = $this->buildQueueCallable($callback);
 
-        $this->queue->later($delay, 'sms@handleQueuedMessage', compact('view', 'data', 'callback'), $queue);
+        $this->queue->later($delay, 'mailer@handleQueuedMessage', compact('view', 'data', 'callback'), $queue);
     }
 
     /**
@@ -179,7 +255,7 @@ class SMS
      * @param array           $data     An array of data to fill the view.
      * @param \Closure|string $callback The callback to run on the Message class.
      */
-    public function laterOn($queue, $delay, $view, $data, $callback)
+    public function laterOn($queue, $delay, $view, array $data, $callback)
     {
         $this->later($delay, $view, $data, $callback, $queue);
     }
@@ -193,7 +269,7 @@ class SMS
      */
     protected function buildQueueCallable($callback)
     {
-        if ( ! $callback instanceof Closure) {
+        if (!$callback instanceof Closure) {
             return $callback;
         }
 
@@ -249,7 +325,7 @@ class SMS
     public function receive()
     {
         //Passes all of the request onto the driver.
-        $raw = $this->container['Illuminate\Support\Facades\Input'];
+        $raw = $this->container['Input'];
 
         return $this->driver->receive($raw);
     }

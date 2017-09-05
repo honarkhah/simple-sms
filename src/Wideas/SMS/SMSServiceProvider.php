@@ -39,6 +39,8 @@ class SMSServiceProvider extends ServiceProvider
                 $sms->alwaysFrom($app['config']['sms']['from']);
             }
 
+            $sms->setPretending($app['config']->get('sms.pretend', false));
+
             return $sms;
         });
     }
@@ -48,7 +50,7 @@ class SMSServiceProvider extends ServiceProvider
      */
     public function registerSender()
     {
-        $this->app['sms.sender'] = $this->app->share(function ($app) {
+        $this->app->singleton('sms.sender',function ($app) {
             return (new DriverManager($app))->driver();
         });
     }
@@ -62,6 +64,7 @@ class SMSServiceProvider extends ServiceProvider
     private function setSMSDependencies($sms, $app)
     {
         $sms->setContainer($app);
+        $sms->setLogger($app['log']);
         $sms->setQueue($app['queue']);
     }
 

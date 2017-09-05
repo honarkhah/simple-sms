@@ -1,10 +1,21 @@
 Simple SMS
 ==========
 
+[![Build Status](https://travis-ci.org/SimpleSoftwareIO/simple-sms.svg?branch=master)](https://travis-ci.org/SimpleSoftwareIO/simple-sms)
+[![Latest Stable Version](https://poser.pugx.org/simplesoftwareio/simple-sms/v/stable.svg)](https://packagist.org/packages/simplesoftwareio/simple-sms)
+[![Latest Unstable Version](https://poser.pugx.org/simplesoftwareio/simple-sms/v/unstable.svg)](https://packagist.org/packages/simplesoftwareio/simple-sms)
+[![License](https://poser.pugx.org/simplesoftwareio/simple-sms/license.svg)](https://packagist.org/packages/simplesoftwareio/simple-sms)
+[![Total Downloads](https://poser.pugx.org/simplesoftwareio/simple-sms/downloads.svg)](https://packagist.org/packages/simplesoftwareio/simple-sms)
+
+## This package is no longer actively developed for Laravel 4.
+
 * [Introduction](#docs-introduction)
 * [Requirements](#docs-requirements)
 * [Configuration](#docs-configuration)
-    * [Melipayamak Driver](#docs-melipayamak-driver)
+    * [Call Fire Driver](#docs-call-fire-driver)
+    * [EZTexting Driver](#docs-ez-texting-driver)
+    * [Email Driver](#docs-e-mail-driver)
+    * [Mozeo Driver](#docs-mozeo-driver)
     * [Twilio Driver](#docs-twilio-driver)
 * [Driver Support](#docs-driver-support)
 * [Usage](#docs-usage)
@@ -13,24 +24,23 @@ Simple SMS
 
 <a id="docs-introduction"></a>
 ## Introduction
-Simple SMS is an easy to use package for [Laravel](http://laravel.com/) that adds the capability to send and receive SMS/MMS messages to mobile phones from your web app. It currently supports a free way to send SMS messages through E-Mail gateways provided by the wireless carriers. The package also supports 6 paid services, [Call Fire,](https://www.callfire.com/) [EZTexting,](https://www.eztexting.com) [LabsMobile,](http://www.labsmobile.com) [Mozeo,](https://www.mozeo.com/) [Nexmo,](https://www.nexmo.com/) [Twilio,](https://www.twilio.com) and [Zenvia.](http://www.zenvia.com.br)
+Simple SMS is an easy to use package for [Laravel](http://laravel.com/) that adds the capability to send and receive SMS/MMS messages to mobile phones from your web app. It currently supports a free way to send SMS messages through E-Mail gateways provided by the wireless carriers. The package also supports four paid services; [Call Fire,](https://www.callfire.com/) [EZTexting,](https://www.eztexting.com) [Mozeo,](https://www.mozeo.com/) and [Twilio.](https://www.twilio.com)
 
 <a id="docs-requirements"></a>
 ## Requirements
 
-#### Laravel 5
-* PHP: >= 5.5
-* Guzzle >= 6.0
+#### Laravel 4
+* PHP: >= 5.4
 
 <a id="docs-configuration"></a>
 ## Configuration
 
 #### Composer
 
-First, add the Laravel SMS package to your `require` in your `composer/json` file:
+First, add the Simple SMS package to your `require` in your `composer/json` file:
 
     "require": {
-        "honarkhah/laravel-sms": "~1"
+        "simplesoftwareio/simple-sms": "~1"
     }
 
 Next, run the `composer update` command.  This will install the package into your Laravel application.
@@ -39,26 +49,121 @@ Next, run the `composer update` command.  This will install the package into you
 
 Once you have added the package to your composer file, you will need to register the service provider with Laravel.
 
-Add `Artisaninweb\SoapWrapper\ServiceProvider::class` in your `config/app.php` configuration file within the `providers` array.
-Add `Wideas\SMS\SMSServiceProvider::class` in your `config/app.php` configuration file within the `providers` array.
+Add `'SimpleSoftwareIO\SMS\SMSServiceProvider'` in your `app/config/app.php` configuration file within the `providers` array.
 
 #### Aliases
 
 Finally, register the Facade.
 
-Add `'SMS' => Wideas\SMS\Facades\SMS::class` in your `config/app.php` configuration file within the `aliases` array.
+Add `'SMS' => 'SimpleSoftwareIO\SMS\Facades\SMS'` in your `app/config/app.php` configuration file within the `aliases` array.
 
 #### API Settings
 
 You must run the following command to save your configuration files to your local app:
 
-    php artisan vendor:publish
+    php artisan config:publish simplesoftwareio/simple-sms
 
-This will copy the configuration files to your `config` folder.
+This will copy the configuration files to your `app/config/simplesoftwareio/simple-sms` folder.
 
->Failure to run the `vendor:publish` command will result in your configuration files being overwritten after every `composer update` command.
+>Failure to run the `config:publish` command will result in your configuration files being overwritten after every `composer update` command.
 
 #### Driver Configuration
+
+<a id="docs-call-fire-driver"></a>
+###### Call Fire Driver
+
+This driver sends and receives all messages through the [Call Fire](https://www.callfire.com/) service.  It is a very quick and reliable service provider that includes many features such as drip campaigns and voice services.
+
+Fill in the `config` file with the correct settings to use this driver.  You can find these settings under your CallFire account and then selecting [API Access.](https://www.callfire.com/ui/manage/access)
+
+    return [
+        'driver' => 'callfire',
+        'from' => 'Not Use For Call Fire',
+        'callfire' => [
+            'app_login' => 'Your App Login',
+            'app_password' => 'Your App Password'
+        ],
+    ];
+
+>Note: All messages from CallFire come from the same short number (67076)
+
+<a id="docs-ez-texting-driver"></a>
+###### EZTexting
+
+This driver sends all messages through the [EZTexting](https://www.eztexting.com) service.  EZTexting has many different options that have proven to be reliable and fast.
+
+Fill in the `config` file with the correct settings to enable EZTexting.
+
+    return [
+        'driver' => 'eztexting',
+        'from' => 'Not Use For EZTexting',
+        'eztexting' => [
+            'username' => 'Your Username',
+            'password' => 'Your Password'
+        ],
+    ];
+
+To enable `receive()` for this service, you must visit the [EZTexting settings page.](https://app.eztexting.com/keywords/index/format/apist)  Enable the `Forwarding API` and `Keyword API` for the messages that you would like forwarded to your web application.
+
+>Note: All messages from EZTexting come from the same short number (313131)
+
+<a id="docs-e-mail-driver"></a>
+###### E-mail Driver
+
+The E-Mail driver sends all messages through the configured e-mail driver for Laravel.  This driver uses the wireless carrier's e-mail gateways to send SMS messages to mobile phones. The biggest benefit to using the e-mail driver is that it is completely free to use.
+
+The only setting for this driver is the `from` setting.  Simply enter an email address that you would like to send messages from.
+
+    return [
+        'driver' => 'email',
+        'from' => 'example@example.com',
+    ];
+
+>If messages are not being sent, ensure that you are able to send E-Mail through Laravel first.
+
+The following are currently supported by using the e-mail gateway driver.
+
+| Country | Carrier | Carrier Prefix | SMS Supported | MMS Supported | Tested? |
+| --- | --- | --- | --- | --- | --- |
+| USA | AT&T | att | Yes | Yes | Yes |
+| USA | Air Fire Mobile | airfiremobile | Yes | No | No |
+| USA | Alaska Communicates | alaskacommunicates | Yes | Yes | No |
+| USA | Ameritech | ameritech | Yes | No | No |
+| USA | Boost Mobile | moostmobile | Yes | Yes | No |
+| USA | Clear Talk | cleartalk | Yes | No | No |
+| USA | Cricket | cricket | Yes | No | No |
+| USA | Metro PCS | metropcs | Yes | Yes | No |
+| USA | NexTech | nextech | Yes | No | No |
+| Canada | Rogers Wireless | rogerswireless | Yes | Yes | No |
+| USA | Unicel | unicel | Yes | Yes | No |
+| USA | Verizon Wireless | verizonwireless | Yes | Yes | No |
+| USA | Virgin Mobile | virginmobile | Yes | Yes | No |
+| USA | T-Mobile | tmobile | Yes | Yes | Yes |
+
+>You must know the wireless provider for the mobile phone to use this driver.
+
+>Careful!  Not all wireless carriers support e-mail gateways around the world.
+
+>Some carriers slightly modify messages by adding the `from` and `to` address to the SMS message.
+
+>An untested gateway means we have not been able to confirm if the gateway works with the mobile provider.  Please provide feedback if you are on one of these carriers.
+
+<a id="docs-mozeo-driver"></a>
+###### Mozeo Driver
+
+This driver sends all messages through the [Mozeo](https://www.mozeo.com/) service.  These settings can be found on your [API Settings](https://www.mozeo.com/mozeo/customer/platformdetails.php) page.
+
+    return [
+        'driver' => 'mozeo',
+        'from' => 'Not Used With Mozeo',
+        'mozeo' => [
+            'companyKey' => 'Your Company Key',
+            'username' => 'Your Username',
+            'password' => 'Your Password'
+        ]
+    ];
+
+>Note: All messages from Mozeo come from the same short number (24587)
 
 <a id="docs-twilio-driver"></a>
 ######  Twilio Driver
@@ -79,35 +184,6 @@ It is strongly recommended to have the `verify` option enabled.  This setting pe
 
 To enable `receive()` messages you must set up the [request URL.](https://www.twilio.com/user/account/phone-numbers/incoming)  Select the number you wish to enable and then enter your request URL.  This request should be a `POST` request.
 
-<a id="docs-melipayamak-driver"></a>
-######  Melipayamak Driver
-
-This driver sends messages through [Zenvia](http://www.zenvia.com.br) messaging service.  It is very reliable service for sending messages to mobile phones in Brazil.
-
-    return [
-        'driver' => 'melipayamak',
-        'from' => 'CompanyABC', //Any String up to 20 chars.
-        'melipayamak' => [
-            'username' => 'Your Melipayamak Username',
-            'password' => 'Your Melipayamak Password',
-            'lineNumbers' => [
-                'NONE'
-            ]
-        ]
-    ];
-
-The Zenvia API `recommends` that you should set an id parameter to each message. It will act as an unique identifier on Zenvia platform, can be used to check delivery status later and will prevent duplicated messages.
-
-This package allows you to set this id passing it as another argument to $sms->to.
-
-    $sms = SMS::send('simple-sms::welcome', $data, function($sms) {
-        $sms->to('5511999991234', 'your-generated-message-id');
-    });
-
-It is not mandatory. For more information about this field, please, refer to the [API docs](http://docs.zenviasms.apiary.io/#introduction/parametro-id).
-
-To enable `receive()` messages you must set up the [callback url](http://docs.zenviasms.apiary.io/#reference/callbacks-da-api) with Zenvia Support team. This request should be a `POST` request.
-
 <a id="docs-driver-support"></a>
 ##Driver Support
 
@@ -115,8 +191,12 @@ Not all drivers support every method due to the differences in each individual A
 
 | Driver | Send | Queue | Pretend | CheckMessages | GetMessage | Receive |
 | --- | --- | --- | --- | --- | --- | --- |
-| Melipayamak | Yes | Yes | Yes | No | No | No |
+| Call Fire | Yes | Yes | Yes | Yes | Yes | No |
+| EZTexting | Yes | Yes | Yes | Yes | Yes | Yes |
+| E-Mail | Yes | Yes | Yes | No | No | No |
+| Mozeo | Yes | Yes | Yes | No | No | No |
 | Twilio | Yes | Yes | Yes | Yes | Yes | Yes |
+
 
 <a id="docs-usage"></a>
 ## Usage
@@ -126,10 +206,14 @@ Not all drivers support every method due to the differences in each individual A
 Simple SMS operates in much of the same way as the Laravel Mail service provider.  If you are familiar with this then SMS should feel like home.  The most basic way to send a SMS is to use the following:
 
     //Service Providers Example
-    SMS::send('laravel-sms::welcome', $data, function($sms) {
-        $sms->to('+98912XXXXXXX');
+    SMS::send('simple-sms::welcome', $data, function($sms) {
+        $sms->to('+15555555555');
     });
 
+    //Email Driver Example
+    SMS::send('simple-sms::welcome', $data, function($sms) {
+        $sms->to('+15555555555', 'att');
+    });
 
 The first parameter is the view file that you would like to use.  The second is the data that you wish to pass to the view.  The final parameter is a callback that will set all of the options on the `message` closure.
 
@@ -138,43 +222,18 @@ The first parameter is the view file that you would like to use.  The second is 
 The `send` method sends the SMS through the configured driver using a Laravel view file.
 
     SMS::send($view, Array $data, function($sms) {
-        $sms->to('+98912XXXXXXX');
+        $sms->to('+15555555555');
     }
     SMS::send('simple-sms::welcome', $data, function($sms) {
-        $sms->to('+98912XXXXXXX');
-    });
-
-It is possible to send a simple message without creating views by passing a string instead of a view.
-
-    SMS::send($message, [], function($sms) {
-        $sms->to('+98912XXXXXXX');
-    }
-    SMS::send('This is my message', [], function($sms) {
-        $sms->to('+98912XXXXXXX');
-    });
-
-#### Driver
-
-The `driver` method will switch the provider during runtime.
-
-    //Will send through default provider set in the config file.
-    SMS::queue('laravel-sms::welcome', $data, function($sms) {
-        $sms->to('+98912XXXXXXX');
-    });
-
-    SMS::driver('twilio');
-
-    //Will send through Twilio
-    SMS::queue('laravel-sms::welcome', $data, function($sms) {
-        $sms->to('+98912XXXXXXX');
+        $sms->to('+15555555555');
     });
 
 #### Queue
 
 The `queue` method queues a message to be sent later instead of sending the message instantly.  This allows for faster respond times for the consumer by offloading uncustomary processing time. Like `Laravel's Mail` system, queue also has `queueOn,` `later,` and `laterOn` methods.
 
-    SMS::queue('laravel-sms::welcome', $data, function($sms) {
-        $sms->to('+98912XXXXXXX');
+    SMS::queue('simple-sms::welcome', $data, function($sms) {
+        $sms->to('+15555555555');
     });
 
 >The `queue` method will fallback to the `send` method if a queue service is not configured within `Laravel.`
@@ -183,13 +242,13 @@ The `queue` method queues a message to be sent later instead of sending the mess
 
 The `pretend` method will simply create a log file that states that a SMS message has been "sent."  This is useful to test to see if your configuration settings are working correctly without sending actual messages.
 
-    SMS::pretend('laravel-sms::welcome', $data, function($sms) {
-        $sms->to('+98912XXXXXXX');
+    SMS::pretend('simple-sms::welcome', $data, function($sms) {
+        $sms->to('+15555555555');
     });
 
 You may also set the `pretend` configuration option to true to have all SMS messages pretend that they were sent.
 
-    `/app/config/sms.php`
+    `/app/config/simplesoftwareio/simple-sms/config.php`
     return array(
         'pretend' => true,
     );
@@ -248,8 +307,10 @@ The `checkMessages` method supports has an `options` variable to pass some setti
 
 More information about each service provider can be found at their API docs.
 
+* [Call Fire](https://www.callfire.com/api-documentation/rest/version/1.1#!/text/QueryTexts_get_1)
+* [EZTexting](https://www.eztexting.com/developers/sms-api-documentation/rest)
+* [Mozeo](https://www.mozeo.com/mozeo/customer/Mozeo_API_OutboundSMS.pdf)
 * [Twilio](https://www.twilio.com/docs/api/rest/message#list-get)
-* [Melipayamak](http://melipayamak.ir/)
 
 #### Get Message
 
@@ -271,9 +332,14 @@ We use enclosures to allow for functions such as the queue methods.  Being able 
 The `to` method adds a phone number that will have a message sent to it.
 
     //Service Providers Example
-    SMS::send('laravel-sms::welcome', $data, function($sms) {
-        $sms->to('+98912XXXXXXX');
-        $sms->to('+98912XXXXXXX');
+    SMS::send('simple-sms::welcome', $data, function($sms) {
+        $sms->to('+15555555555');
+        $sms->to('+14444444444');
+    });
+    //Email Driver
+    SMS::send('simple-sms::welcome', $data, function($sms) {
+        $sms->to('15555555555', 'att);
+        $sms->to('14444444444', 'verizonwireless);
     });
 
 >The carrier is required for the email driver so that the correct email gateway can be used.  See the table above for a list of accepted carriers.
@@ -282,16 +348,20 @@ The `to` method adds a phone number that will have a message sent to it.
 
 The `from` method will set the address from which the message is being sent.
 
-    SMS::send('laravel-sms::welcome', $data, function($sms) {
-        $sms->from('+98912XXXXXXX');
+    SMS::send('simple-sms::welcome', $data, function($sms) {
+        $sms->from('+15555555555');
     });
 
 #### attachImage
 
 The `attachImage` method will add an image to the message.  This will also convert the message to a MMS because SMS does not support image attachments.
 
+    //Email Driver
+    SMS::send('simple-sms::welcome', $data, function($sms) {
+        $sms->attachImage('/local/path/to/image.jpg');
+    });
     //Twilio Driver
-    SMS::send('laravel-sms::welcome', $data, function($sms) {
+    SMS::send('simple-sms::welcome', $data, function($sms) {
         $sms->attachImage('/url/to/image.jpg');
     });
 
