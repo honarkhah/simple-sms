@@ -1,6 +1,6 @@
 <?php
 
-namespace SimpleSoftwareIO\SMS\Facades;
+namespace Wideas\SMS\Facades;
 
 use Illuminate\Support\Facades\Facade;
 
