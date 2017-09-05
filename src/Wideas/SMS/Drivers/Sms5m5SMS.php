@@ -81,7 +81,7 @@ class Sms5m5SMS extends AbstractSMS implements DriverInterface
 
             // Using the added service
             SoapWrapper::service('send_sms', function ($service) use ($data) {
-                return $service->call('send_sms', [$data])->send_smsResponse;
+                return $service->call('send_sms', $data);
             });
         }
     }
