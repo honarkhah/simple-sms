@@ -1,9 +1,8 @@
 <?php
 
-namespace SimpleSoftwareIO\SMS\Drivers;
+namespace Wideas\SMS\Drivers;
 
-use SimpleSoftwareIO\SMS\IncomingMessage;
-use SimpleSoftwareIO\SMS\SMSNotSentException;
+use Wideas\SMS\IncomingMessage;
 
 abstract class AbstractSMS
 {
@@ -20,25 +19,6 @@ abstract class AbstractSMS
      * @var array
      */
     protected $auth = [];
-    
-    /**
-     * Throw a not sent exception
-     *
-     * @param $message
-     * @param $code = 0
-     * @throws SMSNotSentException
-     */
-    protected function throwNotSentException($message, $code = 0)
-    {
-        throw new SMSNotSentException($message, $code);
-    }
-
-    /**
-     * Has the call been built yet
-     *
-     * @var        boolean
-     */
-    protected $callBuilt = false;
 
     /**
      * Creates a new IncomingMessage instance.
@@ -57,11 +37,7 @@ abstract class AbstractSMS
      */
     protected function buildCall($url)
     {
-        if ( ! $this->callBuilt )
-        {
-            $this->apiBase .= $url;    
-            $this->callBuilt = true;
-        }
+        $this->apiBase .= $url;
     }
 
     /**
@@ -74,14 +50,14 @@ abstract class AbstractSMS
     protected function buildUrl(array $segments = [])
     {
         //Get the base URL and add a ?
-        $url = $this->apiBase.'?';
+        $url = $this->apiBase . '?';
 
         if (isset($this->apiEnding)) {
             $segments = array_merge($segments, $this->apiEnding);
         }
 
         foreach ($segments as $key => $value) {
-            $url = $url."$key=$value&";
+            $url = $url . "$key=$value&";
         }
 
         //Remove the final &
@@ -94,7 +70,7 @@ abstract class AbstractSMS
      * Builds the body part of the request and adds it to the body array.
      *
      * @param array|string $values Provides the data to be merged into the array. If a string, the key must be provided.
-     * @param null         $key    Holds the key in which a string will be merged into the array.
+     * @param null $key Holds the key in which a string will be merged into the array.
      */
     public function buildBody($values, $key = null)
     {

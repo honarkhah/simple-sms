@@ -1,9 +1,9 @@
 <?php
 
-namespace SimpleSoftwareIO\SMS\Drivers;
+namespace Wideas\SMS\Drivers;
 
 use Services_Twilio;
-use SimpleSoftwareIO\SMS\OutgoingMessage;
+use Wideas\SMS\OutgoingMessage;
 
 class TwilioSMS extends AbstractSMS implements DriverInterface
 {
@@ -54,7 +54,7 @@ class TwilioSMS extends AbstractSMS implements DriverInterface
     /**
      * Sends a SMS message.
      *
-     * @param \SimpleSoftwareIO\SMS\OutgoingMessage $message
+     * @param \Wideas\SMS\OutgoingMessage $message
      */
     public function send(OutgoingMessage $message)
     {
@@ -115,7 +115,7 @@ class TwilioSMS extends AbstractSMS implements DriverInterface
      *
      * @param string|int $messageId
      *
-     * @return \SimpleSoftwareIO\SMS\IncomingMessage
+     * @return \Wideas\SMS\IncomingMessage
      */
     public function getMessage($messageId)
     {
@@ -131,7 +131,7 @@ class TwilioSMS extends AbstractSMS implements DriverInterface
      *
      * @param mixed $raw
      *
-     * @return \SimpleSoftwareIO\SMS\IncomingMessage
+     * @return \Wideas\SMS\IncomingMessage
      */
     public function receive($raw)
     {
