@@ -2,7 +2,7 @@
     "name": "honarkhah/laravel-sms",
     "description": "laravel-SMS is a package made for Laravel to send/receive (polling/pushing) text messages.  Currently supports melipayamak and Twilio.",
     "keywords": ["sms", "laravel", "melipayamak",  "twilio", "text messages", "send", "receive"],
-    "homepage": "http://www.honarkhah.com/laravel/sms",
+    "homepage": "http://honarkhah.com/laravel/sms",
     "license": "MIT",
     "authors": [
         {
