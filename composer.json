@@ -1,7 +1,7 @@
 {
-    "name": "mammutgroup/simple-sms",
+    "name": "honarkhah/simple-sms",
     "description": "laravel-SMS is a package made for Laravel to send/receive (polling/pushing) text messages.  Currently supports melipayamak, kavengar and Twilio.",
-    "keywords": ["sms", "laravel", "melipayamak", "kavenegar",  "twilio", "text messages", "send", "receive"],
+    "keywords": ["sms", "laravel", "melipayamak", "kavenegar",  "kavenegar", "5m5", "twilio", "text messages", "send", "receive"],
     "homepage": "http://www.simplesoftware.io",
     "license": "MIT",
     "authors": [
